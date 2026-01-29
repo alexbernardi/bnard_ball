@@ -3,6 +3,8 @@
 ## Project Overview
 This is a Three.js standalone application using Vite as the build tool. It follows an object-oriented, class-based architecture with a singleton pattern for the main Experience class. The project features a high-speed physics-based ball rolling down a custom ramp track with dynamic camera systems, HUD display, and precise collision detection using the Rapier physics engine.
 
+**Repository:** https://github.com/alexbernardi/bnard_ball
+
 ## Current Features (Jan 2026)
 - **Physics Ball**: Lightweight (2.5 density) ball with controllable friction (1.0) and restitution (0.6)
 - **Custom Ramp Track**: JSON-defined cuboid colliders (no trimesh edges to prevent bouncing on flat sections)
