@@ -271,14 +271,6 @@ export default class RampL {
         
         this.playerRampMode = true
         this.playerBallisticMode = false
-        
-        console.log('Entered ramp mode:', {
-            rampX: this.rampState.rampX,
-            vS: this.rampState.vS,
-            lateralZ: this.rampState.lateralZ,
-            vZ: this.rampState.vZ,
-            playerRadius: this.playerRadius
-        })
     }
     
     /**
@@ -288,10 +280,6 @@ export default class RampL {
     exitRampMode(exitVelocity) {
         this.playerRampMode = false
         this.playerBallisticMode = true
-        
-        console.log('Exited ramp mode, entering ballistic:', {
-            velocity: exitVelocity
-        })
     }
 
     setModel() {
@@ -300,12 +288,9 @@ export default class RampL {
         if (gltf && gltf.scene) {
             this.model = gltf.scene
             
-            console.log('RampL model loaded, children:')
-            
             // Find the gate plane and ramp meshes from Blender
             this.model.traverse((child) => {
                 if (child.isMesh) {
-                    console.log('  Mesh found:', child.name)
                     
                     if (child.name === 'ramp-entrance-gate') {
                         this.blenderGateMesh = child
@@ -322,7 +307,6 @@ export default class RampL {
             this.model.position.copy(this.blenderOffset)
             
             this.scene.add(this.model)
-            console.log('RampL model added to scene at offset:', this.blenderOffset)
         } else {
             console.warn('RampL model not found!')
         }
@@ -357,8 +341,6 @@ export default class RampL {
         } else {
             this.gateNormal.set(1, 0, 0)
         }
-        
-        console.log('Computed gate mesh created, normal:', this.gateNormal)
         
         // ==========================================
         // COMPUTED RAMP MESH (from curve function)
@@ -421,8 +403,7 @@ export default class RampL {
         
         this.computedRampMesh = new THREE.Mesh(geometry, this.computedMaterial)
         this.scene.add(this.computedRampMesh)
-        
-        console.log('Computed ramp mesh created with', segments, 'segments')
+    
     }
     
     /**
@@ -551,18 +532,6 @@ export default class RampL {
         
         // Log every frame when near the gate
         if (Math.abs(signedDistance) < 30) {
-            console.log('Near gate:', {
-                signedDistance: signedDistance.toFixed(2),
-                prevSignedDistance: prevSignedDistance?.toFixed(2) ?? 'null',
-                lateralDistance: lateralDistance.toFixed(2),
-                halfWidth: halfWidth.toFixed(2),
-                withinWidth,
-                playerY: playerPos.y.toFixed(2),
-                gateY: gatePos.y.toFixed(2),
-                halfHeight: halfHeight.toFixed(2),
-                withinY,
-                gateNormal: `(${this.gateNormal.x.toFixed(2)}, ${this.gateNormal.z.toFixed(2)})`
-            })
             
             // Warn if we're crossing but failing bounds check
             if (prevSignedDistance !== null) {
@@ -591,14 +560,6 @@ export default class RampL {
             const crossedBackward = prevSignedDistance > 0 && signedDistance <= 0
             
             if (crossedForward || crossedBackward) {
-                const velocity = player.vars.body.linvel()
-                console.log('=== GATE CROSSED ===', {
-                    direction: crossedForward ? 'FRONT (forward)' : 'BACK (backward)',
-                    prevSignedDistance: prevSignedDistance.toFixed(2),
-                    signedDistance: signedDistance.toFixed(2),
-                    playerPos: `(${playerPos.x.toFixed(1)}, ${playerPos.y.toFixed(1)}, ${playerPos.z.toFixed(1)})`,
-                    velocity: `(${velocity.x.toFixed(1)}, ${velocity.y.toFixed(1)}, ${velocity.z.toFixed(1)})`
-                })
                 
                 // Enter ramp mode when crossing forward
                 if (crossedForward && !this.playerRampMode) {

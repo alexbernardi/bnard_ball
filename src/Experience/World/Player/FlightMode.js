@@ -131,7 +131,6 @@ export default class FlightMode
         // Pitch angle minus velocity angle (using vertical and horizontal speed)
         const velocityAngle = Math.atan2(velocity.y, Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z))
         let alphaRadUnclamped = pitch - velocityAngle
-        console.log(alphaRadUnclamped)
         const maxAlphaRad = 15 * Math.PI / 180  // 15 degrees in radians
         const alphaRad = Math.max(-maxAlphaRad, Math.min(maxAlphaRad, alphaRadUnclamped))
         const alphaDeg = (alphaRad * 180 / Math.PI).toFixed(1)
