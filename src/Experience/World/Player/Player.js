@@ -155,6 +155,11 @@ export default class Player
             const camInfo = this.camera.getCameraDebugInfo()
             this.hud.updateCameraInfo(camInfo.fov, camInfo.offset, camInfo.mode, camInfo.position, camInfo.quaternion)
         }
+        
+        // Update frame timing info (delta is in ms, convert to seconds for fps)
+        const deltaSeconds = this.time.delta / 1000
+        const fps = 1 / deltaSeconds
+        this.hud.updateFrameInfo(fps, deltaSeconds)
     }
 
     renderGraph()

@@ -1,6 +1,9 @@
+import Stats from 'stats.js'
+
 export default class HUD {
     constructor() {
         this.createHUD()
+        this.createStats()
     }
 
     createHUD() {
@@ -54,12 +57,38 @@ export default class HUD {
         this.cameraQuatElement.textContent = 'QUAT: (0.0, 0.0, 0.0, 1.0)'
         this.container.appendChild(this.cameraQuatElement)
         
+        // Frame timing info
+        this.frameInfoElement = document.createElement('div')
+        this.frameInfoElement.style.marginTop = '8px'
+        this.frameInfoElement.style.color = '#ffaa00'
+        this.frameInfoElement.textContent = 'FPS: 0 | DT: 0.00ms'
+        this.container.appendChild(this.frameInfoElement)
+        
         // Velocity components
         this.velocityElement = document.createElement('div')
         this.velocityElement.style.fontSize = '14px'
         this.container.appendChild(this.velocityElement)
 
         document.body.appendChild(this.container)
+    }
+
+    createStats() {
+        // Create stats.js panels
+        this.stats = new Stats()
+        
+        // Panel 0: FPS
+        // Panel 1: MS (frame time)
+        // Panel 2: MB (memory, Chrome only)
+        this.stats.showPanel(0) // Start with FPS panel
+        
+        // Position stats below the HUD
+        this.stats.dom.style.position = 'fixed'
+        this.stats.dom.style.top = 'auto'
+        this.stats.dom.style.bottom = '20px'
+        this.stats.dom.style.left = '20px'
+        this.stats.dom.style.zIndex = '1000'
+        
+        document.body.appendChild(this.stats.dom)
     }
 
     update(speed, altitude, velocityComponents = null) {
@@ -91,9 +120,23 @@ export default class HUD {
         }
     }
 
+    updateFrameInfo(fps, dt) {
+        if(this.frameInfoElement) {
+            this.frameInfoElement.textContent = `FPS: ${fps.toFixed(0)} | DT: ${(dt * 1000).toFixed(2)}ms`
+        }
+        
+        // Update stats.js
+        if(this.stats) {
+            this.stats.update()
+        }
+    }
+
     destroy() {
         if(this.container && this.container.parentNode) {
             this.container.parentNode.removeChild(this.container)
+        }
+        if(this.stats && this.stats.dom && this.stats.dom.parentNode) {
+            this.stats.dom.parentNode.removeChild(this.stats.dom)
         }
     }
 }

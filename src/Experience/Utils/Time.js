@@ -24,6 +24,8 @@ export default class Time extends EventEmitter
         this.delta = currentTime - this.current
         this.current = currentTime
         this.elapsed = this.current - this.start
+        console.log(this.delta)  // --- IGNORE ---
+        console.log(this.elapsed)  // --- IGNORE ---
 
         this.trigger('tick')
 
